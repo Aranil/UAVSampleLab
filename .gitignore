@@ -128,7 +128,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+UAVSampleLab/.env
 .venv
 env/
 venv/
