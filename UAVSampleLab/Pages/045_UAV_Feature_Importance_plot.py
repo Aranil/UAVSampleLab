@@ -1,3 +1,6 @@
+'''
+Visualisation of the Feature Importance Analysis (data queried from DB)
+'''
 
 import altair as alt
 import pandas as pd
@@ -5,11 +8,11 @@ import streamlit as st
 import re
 
 import config as cfg
-
+from dbflow.src import db_utility as dbu
 
 #st.set_page_config(layout="wide")
 
-# TODO: cleanup the code !
+
 
 
 # Function to convert CamelCase to spaced words and remove 'Classifier'
@@ -38,15 +41,15 @@ sql = f"""SELECT
             refpanel
             
             
-            FROM
+        FROM
             uavfimportance
             
-            WHERE
+        WHERE
             --feature LIKE 'Mean%'
                 (feature NOT LIKE '%DSM' OR feature NOT LIKE '%DSM%')
                 AND feature NOT LIKE 'GLCM%' AND feature NOT LIKE 'GLDV%' AND feature NOT LIKE 'Radius%'
                 AND feature NOT LIKE 'Elliptic%' AND feature NOT LIKE 'Roundness%' AND feature NOT LIKE 'Density%'
-            ORDER BY
+        ORDER BY
             crop_type_code, 
             bbch_group,
             model,
@@ -54,7 +57,8 @@ sql = f"""SELECT
             ;
         """
 
-df = cfg.query_sql(sql)
+
+df = dbu.query_sql(sql, db_engine=cfg.dbarchive.archive.engine)
 
 df['importance_rank'] += 1
 
@@ -74,7 +78,7 @@ else:
 selected_df_all = df.loc[(df['crop_type_code'] == selected_crop)]
 #st.write(selected_df_all)
 
-# ---record_number width - hight
+# ---record_number width - hight of the plot representation
 # WW 200 # 600 - 600
 # SG 230 # 600 - 800
 # WR 130 # 600 - 900
@@ -95,9 +99,10 @@ record_number = plot_param_dict[selected_crop][0]
 
 
 
-# Sort DataFrame by importance_rank and get top 20 rows
+# Sort DataFrame by importance_rank and get top rows
 selected_df = selected_df_all.sort_values(by='importance_rank').head(record_number)
-# Remove 'Mean' from the values in the column
+
+# Remove 'Mean' from the values in the column for better representation
 #selected_df['feature'] = selected_df['feature'].str.replace('Mean', '').str.strip()
 
 dataframe = st.checkbox('Show Dataframe')
@@ -129,6 +134,7 @@ counts = selected_df.groupby(['importance_rank']).agg(total_count=('model', 'cou
 # Merge these counts back into the original DataFrame
 #selected_df = selected_df.merge(counts, on=['model', 'feature', 'importance_rank'])
 selected_df = selected_df.merge(counts, on=['importance_rank'])
+
 # Sort the DataFrame by total_count in descending order before plotting
 selected_df = selected_df.sort_values('total_count', ascending=False)
 st.write(selected_df)
@@ -177,9 +183,9 @@ model_hist = alt.Chart(selected_df).mark_bar(color='lightgrey').encode(
 
 # Combine charts
 combined_chart = alt.hconcat(model_hist, heatmap
-).configure_axis(**chart_config['axis']).configure_legend(
-titleFontSize=22,
-labelFontSize=24
+    ).configure_axis(**chart_config['axis']).configure_legend(
+    titleFontSize=22,
+    labelFontSize=24
 )   # Apply chart configuration
 
 combined_chart.configure(
