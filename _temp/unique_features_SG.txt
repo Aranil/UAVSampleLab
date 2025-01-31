@@ -1,0 +1,150 @@
+Mean A
+Standard deviation A
+mode[Median] A
+quantile[50] A
+Mean B
+mode[Median] B
+quantile[50] B
+Mean B1
+Standard deviation B1
+mode[Median] B1
+quantile[50] B1
+Mean B2
+Standard deviation B2
+mode[Median] B2
+quantile[50] B2
+Border contrast B3
+Mean B3
+Standard deviation B3
+mode[Median] B3
+quantile[50] B3
+Border contrast B4
+Mean B4
+Standard deviation B4
+quantile[50] B4
+Border contrast B5
+Mean B5
+Standard deviation B5
+mode[Median] B5
+quantile[50] B5
+Mean BG
+mode[Median] BG
+quantile[50] BG
+Mean CIVE
+Standard deviation CIVE
+mode[Median] CIVE
+quantile[50] CIVE
+Mean Cb
+Standard deviation Cb
+mode[Median] Cb
+quantile[50] Cb
+Mean Cr
+Skewness Cr
+mode[Median] Cr
+quantile[50] Cr
+Mean EVI
+Standard deviation EVI
+mode[Median] EVI
+quantile[50] EVI
+Border contrast EVI2
+Mean EVI2
+Standard deviation EVI2
+mode[Median] EVI2
+quantile[50] EVI2
+Border contrast ExG
+Mean ExG
+Standard deviation ExG
+mode[Median] ExG
+quantile[50] ExG
+Border contrast ExGR
+Mean ExGR
+mode[Median] ExGR
+quantile[50] ExGR
+Border contrast ExR
+Mean ExR
+Standard deviation ExR
+mode[Median] ExR
+quantile[50] ExR
+Border contrast GNDVI
+Mean GNDVI
+mode[Median] GNDVI
+quantile[50] GNDVI
+Border contrast GRVI
+Mean GRVI
+mode[Median] GRVI
+quantile[50] GRVI
+Border contrast GRVI2
+Mean GRVI2
+Standard deviation GRVI2
+mode[Median] GRVI2
+quantile[50] GRVI2
+Mean H
+Standard deviation H
+mode[Median] H
+quantile[50] H
+Mean I
+Standard deviation I
+mode[Median] I
+quantile[50] I
+Mean L
+mode[Median] L
+quantile[50] L
+Border contrast MExG
+Mean MExG
+Standard deviation MExG
+mode[Median] MExG
+quantile[50] MExG
+Border contrast NDRE
+Mean NDRE
+Standard deviation NDRE
+mode[Median] NDRE
+quantile[50] NDRE
+Border contrast NDSI
+Mean NDSI
+quantile[50] NDSI
+Border contrast NDVI
+Mean NDVI
+mode[Median] NDVI
+quantile[50] NDVI
+Border contrast NDWI
+Mean NDWI
+mode[Median] NDWI
+quantile[50] NDWI
+Border contrast NGRDI
+Mean NGRDI
+mode[Median] NGRDI
+quantile[50] NGRDI
+Mean OSAVI
+mode[Median] OSAVI
+quantile[50] OSAVI
+Border contrast RDVI
+Mean RDVI
+mode[Median] RDVI
+quantile[50] RDVI
+Mean S
+mode[Median] S
+quantile[50] S
+Border contrast SAVI
+Mean SAVI
+Standard deviation SAVI
+mode[Median] SAVI
+quantile[50] SAVI
+Mean TCARI
+Skewness TCARI
+quantile[50] TCARI
+Skewness TCARI/OSAVI
+Mean U
+Standard deviation U
+mode[Median] U
+quantile[50] U
+Mean V
+mode[Median] V
+quantile[50] V
+Border contrast VDVI
+Mean VDVI
+mode[Median] VDVI
+quantile[50] VDVI
+Mean Y
+Standard deviation Y
+mode[Median] Y
+quantile[50] Y
