@@ -10,7 +10,7 @@ import re
 import config as cfg
 from dbflow.src import db_utility as dbu
 
-#st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")
 
 
 
@@ -39,7 +39,6 @@ sql = f"""SELECT
             top_features,
             model,
             refpanel
-            
             
         FROM
             uavfimportance
@@ -78,6 +77,7 @@ else:
 selected_df_all = df.loc[(df['crop_type_code'] == selected_crop)]
 #st.write(selected_df_all)
 
+
 # ---record_number width - hight of the plot representation
 # WW 200 # 600 - 600
 # SG 230 # 600 - 800
@@ -114,11 +114,11 @@ if dataframe:
 chart_config = {
     'axis': {
         'titleFont': 'Arial',
-        'titleFontSize': 20,  # Adjusted from 16 to 20 as per your comments
-        'titleColor': 'black',  # Ensure the title color is black
+        'titleFontSize': 20,
+        'titleColor': 'black',
         'labelFont': 'Arial',
-        'labelFontSize': 14,  # Label font size remains the same
-        'labelColor': 'black'  # Ensure the label color is black
+        'labelFontSize': 14,
+        'labelColor': 'black'
     }
 }
 
@@ -128,9 +128,11 @@ highlight = alt.selection_point()
 select = alt.selection_point(encodings=['x', 'y'])
 
 legend_values = [1,2,3,4,5,6,7]
+
 # Compute the counts for each feature
 #counts = selected_df.groupby(['model', 'feature', 'importance_rank']).agg(total_count=('model', 'count')).reset_index()
 counts = selected_df.groupby(['importance_rank']).agg(total_count=('model', 'count')).reset_index()
+
 # Merge these counts back into the original DataFrame
 #selected_df = selected_df.merge(counts, on=['model', 'feature', 'importance_rank'])
 selected_df = selected_df.merge(counts, on=['importance_rank'])
@@ -139,23 +141,24 @@ selected_df = selected_df.merge(counts, on=['importance_rank'])
 selected_df = selected_df.sort_values('total_count', ascending=False)
 st.write(selected_df)
 
-# Ensure your 'feature' column uses this order when plotting
+# Ensure the 'feature' column uses this order when plotting
 selected_df['feature'] = pd.Categorical(selected_df['feature'], categories=selected_df['feature'].unique())
 
-# Now create the heatmap
+
+# Create the heatmap
 heatmap = alt.Chart(selected_df).mark_rect().encode(
     x=alt.X('importance_rank:O', title='Importance Rank', axis=alt.Axis(labelLimit=1000, labelAngle=0)),
     y=alt.Y('feature:O', title='', axis=alt.Axis(labelLimit=1000),
             #sort=alt.EncodingSortField(field='count', op='max', order='descending'),
             sort=None
-            ),  # No sort needed, data pre-sorted
+            ),
     color=alt.Color(
         'count(feature):Q',
         title=['Number ', 'of Occurrences'],
         scale=alt.Scale(scheme='greys'),
         legend=alt.Legend(format=',', labelColor='black', titleColor='black',
-                         # values=legend_values # Manually specify legend values
-                           )
+                         # values=legend_values
+                        )
     ),
     tooltip=[
         alt.Tooltip('feature', title='Feature'),
@@ -165,8 +168,8 @@ heatmap = alt.Chart(selected_df).mark_rect().encode(
 ).add_params(
     highlight, select
 ).properties(
-    width=plot_param_dict[selected_crop][1],  # Width of the heatmap
-    height=plot_param_dict[selected_crop][2]  # Height of the heatmap
+    width=plot_param_dict[selected_crop][1],
+    height=plot_param_dict[selected_crop][2]
 )
 
 
@@ -176,8 +179,8 @@ model_hist = alt.Chart(selected_df).mark_bar(color='lightgrey').encode(
     x=alt.X('model:N', axis=alt.Axis(labelLimit=1000), title='')
 ).transform_filter(select).properties(
 #combined_chart = (heatmap).properties(
-    width=100,  # Adjust width as needed
-    height=200  # Adjust height as needed
+    width=100,
+    height=200
 )
 
 
@@ -186,8 +189,9 @@ combined_chart = alt.hconcat(model_hist, heatmap
     ).configure_axis(**chart_config['axis']).configure_legend(
     titleFontSize=22,
     labelFontSize=24
-)   # Apply chart configuration
+)
 
+# Apply chart configuration
 combined_chart.configure(
     font='Helvetica',
     axis=alt.AxisConfig(labelFont='Helvetica', titleFont='Helvetica'),
