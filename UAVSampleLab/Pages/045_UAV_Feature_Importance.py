@@ -7,10 +7,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-from dbflow.src import db_utility as dbu
-
-
-# Supervised learning classificators
+# Supervised learning classifiers
 from sklearn.linear_model import SGDClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -19,42 +16,31 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.inspection import permutation_importance
 
-# unsupervised learning classificators
+# unsupervised learning classifiers
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, MaxAbsScaler
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.impute import SimpleImputer
-
 import sklearn
+
 import dashboard_utils as dutils
 import config as cfg
+from dbflow.src import db_utility as dbu
 
 
-
-
-# TODO: cleanup the code !
 
 
 st.write('sklearn version: {}'.format(sklearn.__version__))
 
 
-# Use the full page instead of a narrow central column
-#st.set_page_config(layout="wide")
-
-
-# --------------------------------------------------------------------------------
-# 2. Scatter Plot & Correlation Matrix
-# --------------------------------------------------------------------------------
 
 col01, col02, col03, col04, col05, col06 = st.columns((2, 3, 2, 3, 3, 2))
 with col01:
-    CROP_TYPE = st.selectbox(label='Select Crop Type:',
-                             options=['SG', 'WG', 'WW', 'WR', 'ZwFr', 'KM', 'SM'])
+    CROP_TYPE = st.selectbox(label='Select Crop Type:', options=['SG', 'WG', 'WW', 'WR', 'ZwFr', 'KM', 'SM'])
 with col02:
     JMD = st.slider(label='JMD threshold:', min_value=1.0, max_value=2.0, value=1.9, step=0.1)
 with col03:
     BBCH_GROUP = st.selectbox(label='Select BBCH group:', options=[1, 2, 3, 4, 5, 6, 7, 8, 9])
-# BBCH_GROUP = '2' in WW strange !!
 with col04:
     TOP_FEATURES = st.slider(label='Top Features :', min_value=1, max_value=150, value=10, step=1)
 with col05:
@@ -62,13 +48,12 @@ with col05:
 
 
 # Step 3: Read the unique values back from the text file
-with open(r'...\rcm-dashboard\_temp\unique_features_{}.txt'.format(CROP_TYPE), 'r') as f:
+with open(r'{}\_temp\unique_features_{}.txt'.format(cfg.output_path, CROP_TYPE), 'r') as f:
     read_features = f.read().splitlines()
+
 
 # Convert the read values to a list (if needed)
 read_features_list = list(read_features)
-
-st.write(len(read_features_list))
 
 
 sql_ = f"""
@@ -114,15 +99,15 @@ sql_ = f"""
 """
 # AND bbch_group == '{str(BBCH_GROUP)}'
 
-dt_hist = dbu.query_sql(sql_, db=cfg.dbarchive3.archive.engine)
+dt_hist = dbu.query_sql(sql_, db_engine=cfg.dbarchive.archive.engine)
 data_hist = dutils.feature_layer_split(dt_hist)['df']
 
 FEATURES = data_hist['feature'].unique().tolist()
 
 data_hist = None
 
-R_Panel = st.selectbox(label='Reference Panel:', options=['RP', 'noRP', 'all'])
 
+R_Panel = st.selectbox(label='Reference Panel:', options=['RP', 'noRP', 'all'])
 
 if (R_Panel == 'RP') or (R_Panel == 'noRP'):
     sql_text = f"""
@@ -140,7 +125,7 @@ bbch_sql = f"""  AND
                  bbch_group == '{BBCH_GROUP}'  
             """
 
-st.write(FEATURES)
+
 
 # -----------------------------------------------
 #  plot Feature Importance
@@ -189,7 +174,7 @@ sql_filter = f"""SELECT
                 --pattern
                 ;
 """
-sql_dt = dbu.query_sql(sql_filter, db=cfg.dbarchive2.archive.engine)
+sql_dt = dbu.query_sql(sql_filter, db_engine=cfg.dbarchive.archive.engine)
 data = dutils.feature_layer_split(sql_dt)['df'] #-> for all features, ['df'] -> for features except texture
 
 # convert some values to categorical data
@@ -200,7 +185,7 @@ data['uav_date'] = data['uav_date'].astype('category')
 data['value'] = pd.to_numeric(data['value'], errors='coerce')
 
 
-st.write('Contains NA value:{}'.format(data.isnull().any().any()))
+#('Contains NA value:{}'.format(data.isnull().any().any()))
 
 
 means_stds = None
@@ -214,7 +199,9 @@ means_stds = None
 #data['value_standardized'] = (data['value'] - data['mean']) / data['std']
 #data = data.drop(columns=['value', 'mean', 'std'])
 
+# columns
 #'aoi', 'bbch', 'sensor', 'fid', 'crop', 'bbch_group', 'damage', 'pattern', 'inner_x', 'inner_y',
+
 #dt = data.pivot_table(index=['class_name', 'bbch', 'bbch_group', 'sensor', 'fid', 'crop', 'uav_date', 'aoi'], columns=['feature'], values=['value_standardized'], aggfunc=np.nanmedian)
 dt = data.pivot_table(index=['class_name', 'bbch', 'bbch_group', 'sensor', 'fid', 'crop', 'uav_date', 'aoi'], columns=['feature'], values=['value'], aggfunc=np.nanmedian)
 
@@ -229,9 +216,10 @@ data = dt.drop(columns=['bbch', 'bbch_group', 'sensor', 'fid', 'crop', 'uav_date
 # define data arrays
 y = data.values[:, :1] # [:, -1] -> to get the last column of 2d array
 X = data.values[:, 1:] # [:, :-1] -> to get all columns except the last one
+
 # summarize the dataset
-st.write('shape of the y data: {}'.format(y.shape))
-st.write('shape of X data: {}'.format(X.shape))
+#st.write('shape of the y data: {}'.format(y.shape))
+#st.write('shape of X data: {}'.format(X.shape))
 
 
 
@@ -248,15 +236,11 @@ if ordinal_decode == True:
 
 label_decode = True
 if label_decode == True:
-    # google aboute OneHotEncoder
     #encoder
     le = LabelEncoder()
     le.fit(y)
     y = le.transform(y)
     #to inverse: list(le.inverse_transform([2, 2, 1])
-
-
-
 
 
 imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
@@ -298,11 +282,9 @@ X = X_scaled
 
 # extract existing features & get rid of column name 'class_name' -> labels
 feature_list = data.columns.tolist()[1:]
-print(data.columns.tolist())
 
 
 
-# supervised for classification feature importance
 dtree = DecisionTreeClassifier() # non-parametric classifier
 rfm = RandomForestClassifier() #random_stat=101, # non-parametric classifier
 xbst = XGBClassifier()
@@ -330,22 +312,20 @@ c1, c2, c3, c4, c5, = st.columns((4, 4, 4, 4, 4))
 streamlit_columns = [c1, c2, c3, c4, c5]
 
 
-
 insert_data = pd.DataFrame()
+
 # fit the model
-yP = [None] * (len(models) + 3)
+#yP = [None] * (len(models) + 3)
 for i, model in enumerate(models):
-    print(i)
 
     try:
         model.fit(X, y)
         #yP[i] = model.predict(X)
 
-        st.write(f'{model}'.split('(')[0])
-
+        #st.write(f'{model}'.split('(')[0])
         model_name = f'{model}'.split('(')[0]
+        #st.write(model_name)
 
-        st.write(model_name)
         # get importance
         if (str(model_name) == 'RandomForestClassifier') or (model_name == 'DecisionTreeClassifier') or (str(model_name) == 'XGBClassifier'):
             importance = model.feature_importances_
@@ -363,6 +343,7 @@ for i, model in enumerate(models):
 
         if importance.any() != None:
             feature_dict = {}
+
             # summarize feature importance
             for ind, v in enumerate(importance):
                 feature_dict[feature_list[ind]] = v
@@ -371,6 +352,7 @@ for i, model in enumerate(models):
             #-------- create a dict of feature as keys and importance as value
             importance_dict = dict(sorted(feature_dict.items(), key=lambda kv: kv[1]))
             df, dff = None, None
+
             # convert dictionary to df and sort ascending by score
             df = pd.DataFrame(list(importance_dict.items()), columns=['feature', 'score'])
             df['score_abs'] = df['score'].apply(lambda row: abs(row))
@@ -388,27 +370,28 @@ for i, model in enumerate(models):
 
             insert_data = pd.concat([insert_data, dff], ignore_index=True)
     except:
-        print('{} did nt worked'.format(model_name))
+        print('{} did not worked'.format(model_name))
 
     with streamlit_columns[i]:
         st.markdown("{}".format(model_name))
         #st.dataframe(dff[['feature', 'score']].style.apply(highlight_max, subset=['score']))
         st.dataframe(dff[['feature', 'score']])
 
-st.write(insert_data)
+
+
+#st.write(insert_data)
 with col06:
     if st.button("Calculate feature Importance & Import to DB"):
 
-        # this needed to reopen the db in each update in the same threath
-        db_path_2 = config('DB_PATH_2')
-        db = dbu.connect2db(db_path_2)
+        # this needed to reopen the db in each update in the same thread
+        db = dbu.connect2db(cfg.db_path)
+
         # ------- Insert Results
         pim_key = db.get_primary_keys('uavfimportance')
         db.insert(table='uavfimportance', primary_key=pim_key,
                   orderly_data=insert_data.to_dict(orient='records'), verbose=True, update=True)
         print('Inserted feature importance: {}'.format(model_name))
 
-    print('Finished Inserting Data to DB !')
 
 
 
@@ -428,24 +411,6 @@ st.write(knn.get_params())
 st.write("\nStochastic Gradient Descent Classifier default hyperparameters:")
 st.write(sgd.get_params())
 
-
-
-
-for k, v in model_summary.items():
-    print(k, v)
-
-    '''
-    
-    # plot feature importance
-    fig, ax = plt.subplots()
-    locs = [x for x in range(len(importance))]
-    plt.bar(locs, importance_dict.values())
-    #ax.set_xticks([x for x in range(len(importance))])
-    plt.xticks(locs,importance_dict.keys(), rotation='vertical')
-    #plt.set_title('Test')
-    
-    st.pyplot(fig)
-    '''
 
 
 
