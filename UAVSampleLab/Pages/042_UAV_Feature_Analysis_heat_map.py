@@ -1,10 +1,9 @@
 '''
-visualisation of Feature Analysis
+Visualisation of Feature Analysis - Jeffries Matusita Distance (JMD) Metric, queried from DB
 '''
 
 import streamlit as st
 import altair as alt
-
 
 
 import colors
@@ -22,10 +21,10 @@ with col01:
     CROP_TYPE = st.selectbox(label='Select AOI:', options=['WW', 'SG', 'WG', 'WR', 'ZwFr', 'KM']) #, 'WG', 'WR', 'ZwFr', 'KM'
 with col02:
     JMD = st.slider(label='JMD threshold:', min_value=1.0, max_value=2.0, value=1.9, step=0.1)
-#THRESHOLD = st.slider(label='feature threshold:', min_value=1, max_value=20, value=16, step=1)
+
 st.write('')
 
-# AND refpanel == 'RP' # only for Corn is noRP
+
 
 if CROP_TYPE == 'KM':
     R_Panel = 'noRP'
@@ -42,10 +41,8 @@ sql_filter = f"""
                                 class1, class2, 
                                 refpanel
                                 --COUNT(jmd) as count_jmd
-                
                             FROM
                                 uavfeaturejmd
-                                
                             WHERE 
                                 jmd >= {JMD}
                             AND (class1  LIKE '{CROP_TYPE}%' OR class2 LIKE 'UNK%' AND class1 LIKE 'UNK%' OR class2 LIKE '{CROP_TYPE}%' )
@@ -57,7 +54,6 @@ sql_filter = f"""
                             GROUP BY
                                 feature,
                                 class1, class2
-                                
                             ORDER BY 
                                 --COUNT(jmd) DESC,
                                 feature 
@@ -74,6 +70,7 @@ number_of_samples = {
                     'WR': 26,
                     'KM': 10
                     }
+
 
 if CROP_TYPE == 'KM':
     Proportion_for_Feature_Importance = 0.20
@@ -156,12 +153,10 @@ heatmap1 = alt.Chart(df2
     alt.datum.count > SELECT_THRESH  # Filtering the counts to be greater than 60
 ).mark_rect(stroke='lightgrey', strokeWidth=0.1
 ).encode(
-    x=alt.X('layers:O',# bin=False, #sort=None,
+    x=alt.X('layers:O',
             sort=alt.EncodingSortField(field='count', op='max', order='descending'),
             axis=alt.Axis(labelFontSize=28, labelColor='black', labelLimit=300, titleColor='black', titleFontSize=30,
                           labelAlign='right', labelPadding=10),
-            #title = alt.Title(text='X Axis Label', fontSize=16, color='black')
-            #title = 'layer',
             title=''
             #title = 'Layers of {}'.format(colors.crop_types[CROP_TYPE])
             ),
@@ -169,8 +164,6 @@ heatmap1 = alt.Chart(df2
             sort=alt.EncodingSortField(field='count', op='max', order='descending'),
             axis=alt.Axis(labelFontSize=28, labelColor='black', labelLimit=300, titleColor='black', titleFontSize=30,
                           labelAlign='right', labelPadding=10),
-            #title = alt.Title(text='X Axis Label', fontSize=16, color='black')
-            #title='feature'
             title=''
             ),
     color=alt.Color('count:Q',
@@ -241,9 +234,9 @@ st.write(heatmap_texture)
 heatmaps = alt.hconcat(heatmap1,
                      heatmap_texture
                      )#.resolve_scale(
-                     #   x='shared',
-                        #y='shared'
-                    # )
+                     #x='shared',
+                     #y='shared'
+                     #)
 
 
 
@@ -261,8 +254,9 @@ heatmaps = alt.hconcat(heatmap1,
 # Step 1: Extract unique values from 'features' column
 #unique_features = transformed_df['feature'].unique()
 
+
 # Step 2: Write the unique values to a text file
-with open(r'...\xx_03_processing\rcm-dashboard\_temp\unique_features_{}.txt'.format(CROP_TYPE), 'w') as f:
+with open(r'{}\_temp\unique_features_{}.txt'.format(cfg.output_path, CROP_TYPE), 'w') as f:
     for feature in unique_features:
         f.write(f"{feature}\n")
 
@@ -305,13 +299,9 @@ rect = alt.Chart(source
 # ---- PLot Heat plots
 heatmap3 = alt.Chart(source
 ).mark_rect(stroke='lightgrey', strokeWidth=1).encode(
-    #x=alt.X('layers:O', sort=None, title='layers/degree'),
-    #y=alt.Y('features:O', sort=alt.EncodingSortField(field='features', order='ascending')),
     x=alt.X('layers:O', sort=alt.EncodingSortField(field='layers', op='count', order='descending'), title='layers/degree'),
     y=alt.Y('features:O', sort=alt.EncodingSortField(field='features', op='count', order='ascending')),
-    color=alt.Color('count(jmd):Q', scale=alt.Scale(scheme='greenblue')), # scheme='redblue',
-   # order=alt.Order('count(jmd):Q', sort='descending'),
-    #opacity=alt.condition('count(jmd):Q' < selector.cutoff, alt.OpacityValue(1), alt.OpacityValue(0.1)),
+    color=alt.Color('count(jmd):Q', scale=alt.Scale(scheme='greenblue')),
     tooltip=['features', 'layers',  'count(jmd)', 'feature_level:N']
 ).transform_filter(
     click,
