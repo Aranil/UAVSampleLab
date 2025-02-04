@@ -15,3 +15,8 @@ This repository contains the scripts used in the analysis presented in the paper
 *****for Section 4.2.2. Class Variability***** 
 
 UAVSampleLab/texture_analysis/semivariogram.py 
+
+
+
+Contributors: [Niklas Schmitt](https://github.com/Niklas-Schm/)
+              [Friederike Metz](https://github.com/friedmag-m)
