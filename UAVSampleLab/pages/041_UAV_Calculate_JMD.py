@@ -306,8 +306,7 @@ if CROP_TYPE:
         # alt.Y('Indices'),
         tooltip='jmd:Q',
     )
-    line = alt.Chart(pd.DataFrame({'jmd': [1.3]})).mark_rule(color='red', size=2).encode(
-        x='jmd')  # 1.3 as JMD Value Threshold
+    line = alt.Chart(pd.DataFrame({'jmd': [1.3]})).mark_rule(color='red', size=2).encode(x='jmd')  # 1.3 as JMD Value Threshold
 
     #### Layout
     col01, col02 = st.columns(2)

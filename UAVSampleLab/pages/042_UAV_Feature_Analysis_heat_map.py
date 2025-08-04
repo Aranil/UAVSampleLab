@@ -158,7 +158,7 @@ heatmap1 = alt.Chart(df2
             axis=alt.Axis(labelFontSize=28, labelColor='black', labelLimit=300, titleColor='black', titleFontSize=30,
                           labelAlign='right', labelPadding=10),
             title=''
-            #title = 'Layers of {}'.format(colors.crop_types[CROP_TYPE])
+            #title = 'Layers of {}'.format(cfg.crop_types[CROP_TYPE])
             ),
     y=alt.Y('features:O',
             sort=alt.EncodingSortField(field='count', op='max', order='descending'),
@@ -178,7 +178,7 @@ heatmap1 = alt.Chart(df2
     height=470,
     #width=1650, #/ 1.1, # only for Corn
     #height=470/ 1.23, # only for Corn
-    title=alt.TitleParams(text='{}'.format(colors.crop_types[CROP_TYPE]), fontSize=22, align='center')
+    title=alt.TitleParams(text='{}'.format(cfg.crop_types[CROP_TYPE]), fontSize=22, align='center')
 #).configure_legend(titleColor='black', titleFontSize=14
 ).add_selection(
     highlight,
