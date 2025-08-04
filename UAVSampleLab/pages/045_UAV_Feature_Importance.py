@@ -6,6 +6,7 @@ The Results can be imported to DB
 import streamlit as st
 import numpy as np
 import pandas as pd
+import pathlib
 
 # Supervised learning classifiers
 from sklearn.linear_model import SGDClassifier
@@ -48,7 +49,7 @@ with col05:
 
 
 # Step 3: Read the unique values back from the text file
-with open(r'{}\_temp\unique_features_{}.txt'.format(cfg.output_path, CROP_TYPE), 'r') as f:
+with open(r'{}\_temp\unique_features_{}.txt'.format(pathlib.Path(cfg.output_path).parent, CROP_TYPE), 'r') as f:
     read_features = f.read().splitlines()
 
 
@@ -396,20 +397,20 @@ with col06:
 
 
 # Print default hyperparameters
-st.write("Decision Tree Classifier default hyperparameters:")
-st.write(dtree.get_params())
+#st.write("Decision Tree Classifier default hyperparameters:")
+#st.write(dtree.get_params())
 
-st.write("\nRandom Forest Classifier default hyperparameters:")
-st.write(rfm.get_params())
+#st.write("\nRandom Forest Classifier default hyperparameters:")
+#st.write(rfm.get_params())
 
-st.write("\nXGBoost Classifier default hyperparameters:")
-st.write(xbst.get_params())
+#st.write("\nXGBoost Classifier default hyperparameters:")
+#st.write(xbst.get_params())
 
-st.write("\nK-Nearest Neighbors Classifier default hyperparameters:")
-st.write(knn.get_params())
+#st.write("\nK-Nearest Neighbors Classifier default hyperparameters:")
+#st.write(knn.get_params())
 
-st.write("\nStochastic Gradient Descent Classifier default hyperparameters:")
-st.write(sgd.get_params())
+#st.write("\nStochastic Gradient Descent Classifier default hyperparameters:")
+#st.write(sgd.get_params())
 
 
 
