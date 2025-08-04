@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<batchjobs version="1.8.1">
+  <job name="AlignPhotos" enabled="false" target="list" chunks="4;5">
+    <downscale>0</downscale>
+    <mask_tiepoints>false</mask_tiepoints>
+    <tiepoint_limit>10000</tiepoint_limit>
+  </job>
+  <job name="BuildDenseCloud" enabled="false" target="list" chunks="0">
+    <downscale>1</downscale>
+    <reuse_depth>true</reuse_depth>
+  </job>
+  <job name="BuildDem" enabled="false" target="list" chunks="0">
+    <downscale>1</downscale>
+    <projection>
+      <crs>PROJCS["WGS 84 / UTM zone 32N",GEOGCS["WGS 84",DATUM["World Geodetic System 1984 ensemble",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9102"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator",AUTHORITY["EPSG","9807"]],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",9],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","32632"]]</crs>
+      <transform>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</transform>
+      <surface>0</surface>
+      <radius>1</radius>
+    </projection>
+    <reuse_depth>true</reuse_depth>
+  </job>
+  <job name="ExportDem" enabled="false" target="list" chunks="0">
+    <image_compression>
+      <tiff_big>true</tiff_big>
+      <tiff_tiled>false</tiff_tiled>
+      <tiff_overviews>false</tiff_overviews>
+      <tiff_compression>5</tiff_compression>
+      <jpeg_quality>90</jpeg_quality>
+    </image_compression>
+    <image_format>2</image_format>
+    <path>D:/UAV/E_Produkte/FRIEN/82-00/UAV_CIR_DEM_xx_32632_FRIEN_2021_fid_82-00_{chunklabel}.tif</path>
+    <projection>
+      <crs>PROJCS["WGS 84 / UTM zone 32N",GEOGCS["WGS 84",DATUM["World Geodetic System 1984 ensemble",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9102"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator",AUTHORITY["EPSG","9807"]],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",9],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","32632"]]</crs>
+      <transform>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</transform>
+      <surface>0</surface>
+      <radius>1</radius>
+    </projection>
+    <source_data>4</source_data>
+  </job>
+  <job name="BuildOrthomosaic" target="list" chunks="0">
+    <projection>
+      <crs>PROJCS["WGS 84 / UTM zone 32N",GEOGCS["WGS 84",DATUM["World Geodetic System 1984 ensemble",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9102"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator",AUTHORITY["EPSG","9807"]],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",9],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","32632"]]</crs>
+      <transform>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</transform>
+      <surface>0</surface>
+      <radius>1</radius>
+    </projection>
+    <surface_data>4</surface_data>
+  </job>
+  <job name="ExportOrthomosaic" enabled="false" target="list" chunks="0">
+    <image_compression>
+      <tiff_big>true</tiff_big>
+      <tiff_tiled>false</tiff_tiled>
+      <tiff_overviews>false</tiff_overviews>
+      <tiff_compression>5</tiff_compression>
+      <jpeg_quality>90</jpeg_quality>
+    </image_compression>
+    <image_format>2</image_format>
+    <path>D:/UAV/E_Produkte/FRIEN/82-00/UAV_CIR_ortho_xx_32632_FRIEN_2021_fid_82-00_{chunklabel}.tif</path>
+    <projection>
+      <crs>PROJCS["WGS 84 / UTM zone 32N",GEOGCS["WGS 84",DATUM["World Geodetic System 1984 ensemble",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],TOWGS84[0,0,0,0,0,0,0],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9102"]],AUTHORITY["EPSG","4326"]],PROJECTION["Transverse_Mercator",AUTHORITY["EPSG","9807"]],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",9],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1,AUTHORITY["EPSG","9001"]],AUTHORITY["EPSG","32632"]]</crs>
+      <transform>1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</transform>
+      <surface>0</surface>
+      <radius>1</radius>
+    </projection>
+    <raster_transform>1</raster_transform>
+    <save_alpha>false</save_alpha>
+  </job>
+</batchjobs>
