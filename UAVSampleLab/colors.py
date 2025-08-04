@@ -2,13 +2,17 @@
 definition of the colors for rcm-dashboard plots
 '''
 
-
-crop_types = {
-                  'WW': 'Winter Wheat'
-                , 'SG': 'Spring Barley'
-                , 'KM': 'Corn'
-                , 'WR': 'Rapeseed'
+pattern_colors = {
+                'bare_soil': '#333333'
+                , 'vital_crop': '#2ca02c'
+                , 'vital_lodged_crop': '#1f77b4'
+                , 'flowering_crop': '#e377c2'
+                , 'ripening_crop': '#ff7f0e'
+                , 'dry_crop': '#ff7f0e'
+                , 'dry_lodged_crop': '#9467bd'
+                , 'weed_infestation': '#d62728'
                 }
+
 
 crop = {
                   'WW': ['teal', 'Winter Wheat', 'Winterweizen']
