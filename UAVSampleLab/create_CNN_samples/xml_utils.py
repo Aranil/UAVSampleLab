@@ -108,7 +108,7 @@ def generate_xml_meta(
     #pattern_code = "WR_5_0_1"
     #pattern = "lodged_area"
     #fid = '190-00'
-    #file_link = 'D:/__crop_samples/stacks/samples_tiles/WR/WR_6_0_2/190_WR_6_0_2_79.tif'
+    #file_link = 'M:/__crop_samples/stacks/samples_tiles/WR/WR_6_0_2/190_WR_6_0_2_79.tif'
 
     #segment_meta['flink']
     #segment_meta['pattern_code']
